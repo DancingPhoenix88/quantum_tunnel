@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quantum Tunnel - Vu Phuong Hoang</title>
+<style>
+  html, body { 
+    width: 100%;
+    height: 100%; 
+    margin: 0;
+    background: #1c2a2f; 
+    overflow: hidden; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+  }
+  css-doodle {
+    --duration: 3s;
+    --color: @pick(#FBE7C6, #B4F8C8, #A0E7E5, #FFAEBC, #FFFFDD); /* Pick 1 of 5 colors randomly EVERYTIME 'var(--color)' is called */
+    --rule: (
+      /* ---------------------------------------------------------------- */
+      :doodle {
+        @grid: 30x1;                  /* Create a grid with 30 rows & 1 column, size = min(viewport width, viewport height) * 18% */
+        --deg: -180deg;               /* Pick destination degree */
+      }
+
+      /* ---------------------------------------------------------------- */
+      :container {
+        perspective: 30vmin;            /* Container is put away min(viewport width, viewport height) * 30% */
+      }
+
+      /* ---------------------------------------------------------------- */
+      :after, :before {                 /* For each 'div', create a small hexagon shape */
+        content: '';
+        @shape: hexagon;
+        background: var(--color);             /* set hexagon color */
+        @place-cell: @rand(100%) @rand(100%); /* random position */
+        @size: @rand(6px);                    /* random size <= 6px */
+      }
+    
+      /* ---------------------------------------------------------------- */
+      /* For each 'div' element, put it at center of viewport, size = 100% */
+      @place-cell: center;
+      @size: 20vmin 12vmin;
+      border-radius: 10%;
+      box-shadow: @m(2, 0 0 50px var(--color));             /* Double the shadow */
+      background: @m(100,
+        radial-gradient(var(--color) 50%, transparent 0)  /*    Radial gradient with random center */
+        @rand(-20%, 120%) @rand(-20%, 100%) / 1px 1px
+        no-repeat
+      );
+
+      /* Animation for each div */
+      will-change: transform, opacity;
+      animation: light-on var(--duration) linear infinite;
+      animation-delay: calc(var(--duration) / @size() * @index() * -1);   /* Set animation overlapped delay */
+
+      /* Animate position(scale up), rotate, opacity by time */
+      @keyframes light-on {
+        0%, 
+        95.01%, 
+        100%  { transform: translateZ(0) rotateZ(10deg); }
+        10%   { opacity: 1; }
+        95%   { transform: translateZ(30vmin) rotateZ(-5deg); }
+        96%   { opacity: 0;  }
+      }
+    )
+  }
+  .suit {
+    background: url("suit1.png");
+    display: block;
+    position: absolute;
+    bottom: -60px;
+    left: 55%;
+    will-change: transform;
+    animation: shake 0.3s linear infinite;
+  }
+  #main_suit {
+    width: 200px;
+    height: 200px;
+    background-size: 200px 200px;
+  }
+  #shadow_suit_1 {
+    opacity: 0.2;
+    width: 300px;
+    height: 300px;
+    background-size: 300px 300px;
+    bottom: -160px;
+    animation-delay: 0.03s;
+    left: 53%;
+    filter: blur(1px);
+  }
+  #shadow_suit_2 {
+    opacity: 0.2;
+    width: 400px;
+    height: 400px;
+    background-size: 400px 400px;
+    bottom: -270px;
+    animation-delay: 0.1s;
+    left: 53%;
+    filter: blur(2px);
+  }
+  @keyframes shake {
+    0%, 100% { transform: rotateZ(-9deg); left: 54%; }
+    25%      { transform: rotateZ(-5deg);  }
+    50%      { transform: rotateZ(-9deg); left: 55%; }
+    75%      { transform: rotateZ(-5deg);  }
+  }
+  .poster {
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    will-change: opacity;
+    animation: fade 9s linear infinite;
+    background-size: cover;
+    filter: brightness(0.5);
+  }
+  @keyframes fade {
+    0%, 33%, 100% { opacity: 0; }
+    17%           { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+<div class="poster" style="background-image: url('https://i.ytimg.com/vi/oBqqI6NMeaM/maxresdefault.jpg');"></div>
+<div class="poster" style="background-image: url('https://static.rogerebert.com/uploads/review/primary_image/reviews/avengers-infinity-war-2018/hero_Infinity-War-2018.jpg'); animation-delay: 3s;"></div>
+<div class="poster" style="background-image: url('https://www.pixelstalk.net/wp-content/uploads/2015/12/Iron-man-hd-wallpaper.jpg'); animation-delay: 6s;"></div>
+<css-doodle use="var(--rule)"></css-doodle>
+<div id="main_suit" class="suit"></div>
+<div id="shadow_suit_1" class="suit"></div>
+<div id="shadow_suit_2" class="suit"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.6.1/css-doodle.min.js"></script>
+<audio preload autoplay loop><source src="avengers.mp3" type="audio/mp3"></audio>
+</body>
+</html>
